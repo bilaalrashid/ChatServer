@@ -55,7 +55,7 @@ class Server {
     // Receive
 
     /**
-     * Is the server currently receiving data from the server
+     * Is the server currently receiving data from the client
      * @return If the server is currently receiving data
      * @throws IOException Error receiving input
      */
