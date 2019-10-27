@@ -57,10 +57,13 @@ class Server {
     /**
      * Is the server currently receiving data from the client
      * @return If the server is currently receiving data
-     * @throws IOException Error receiving input
      */
-    boolean isReceiving() throws IOException {
-        return (this.currentInput = this.serverInput.readLine()) != null;
+    boolean isReceiving() {
+        try {
+            return (this.currentInput = this.serverInput.readLine()) != null;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
