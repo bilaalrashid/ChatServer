@@ -1,17 +1,36 @@
+import java.io.IOException;
+
 /**
  * The main interface for the server
  */
 public class Main {
 
     /**
-     * Gets the port to run the server on
+     * Runs a server on a specified port
      * @param args The command line arguments
      */
     public static void main(String[] args) {
         if (args != null && args.length == 1) {
             int port = Integer.parseInt(args[0]);
+
+            try {
+                Server server = new Server(port);
+
+                while (true) {
+                    if (server.isReceiving()) {
+                        try {
+                            Message message = Message.fromJsonString(server.getMessage());
+                            Console.write(message);
+                        } catch (IOException e) {
+                            Console.write("Error receiving message");
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                Console.write("Server could not be started.");
+            }
         } else {
-            System.out.println("Invalid arguments. Port not specified.");
+            Console.write("Invalid arguments. Port not specified.");
         }
     }
 
