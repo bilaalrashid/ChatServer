@@ -1,6 +1,6 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -14,12 +14,12 @@ class ClientHandler extends Thread {
     /**
      * The stream of input data
      */
-    private final DataInputStream inputStream;
+    private final BufferedReader inputStream;
 
     /**
      * The stream of output data
      */
-    private final DataOutputStream outputStream;
+    private final PrintWriter outputStream;
 
     /**
      * The connection socket
@@ -39,7 +39,7 @@ class ClientHandler extends Thread {
      * @param inputStream The stream of output data
      * @param outputStream The connection socket
      */
-    ClientHandler(Socket socket, DataInputStream inputStream, DataOutputStream outputStream) {
+    ClientHandler(Socket socket, BufferedReader inputStream, PrintWriter outputStream) {
         this.socket = socket;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
@@ -56,11 +56,11 @@ class ClientHandler extends Thread {
                     String[] responses = this.messageHandler.getResponses();
 
                     for (String response : responses) {
-                        this.outputStream.writeUTF(response);
+                        this.outputStream.println(response);
                     }
                 }
 
-                String input = inputStream.readUTF();
+                String input = inputStream.readLine();
 
                 if (input != null) {
                     this.messageHandler.handleMessage(input);

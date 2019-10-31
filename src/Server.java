@@ -35,10 +35,10 @@ class Server {
     void listenForClients() throws IOException {
         Socket clientSocket = this.serverSocket.accept();
 
-        DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
-        DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+        BufferedReader inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
 
-        Thread thread = new ClientHandler(clientSocket, dis, dos);
+        Thread thread = new ClientHandler(clientSocket, inputStream, outputStream);
 
         thread.start();
     }
