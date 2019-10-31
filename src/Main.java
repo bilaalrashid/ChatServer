@@ -17,13 +17,10 @@ public class Main {
                 Server server = new Server(port);
 
                 while (true) {
-                    if (server.isReceiving()) {
-                        try {
-                            Message message = Message.fromJsonString(server.getMessage());
-                            Console.write(message);
-                        } catch (IOException e) {
-                            Console.write("Error receiving message");
-                        }
+                    try {
+                        server.listenForClients();
+                    } catch (IOException e) {
+                        Console.write("Error connecting to client");
                     }
                 }
             } catch (IOException e) {

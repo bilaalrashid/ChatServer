@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -13,19 +10,9 @@ class Server {
     // Properties
 
     /**
-     * The input channel of the server
+     * The server socket
      */
-    private BufferedReader serverInput;
-
-    /**
-     * The output channel of the server
-     */
-    private PrintWriter serverOutput;
-
-    /**
-     * The current line of input into the server
-     */
-    private String currentInput = null;
+    private ServerSocket serverSocket;
 
     // Constructor
 
@@ -36,47 +23,24 @@ class Server {
      */
     Server(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        Socket clientSocket = serverSocket.accept();
-
-        this.serverInput = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        this.serverOutput = new PrintWriter(clientSocket.getOutputStream(), true);
+        this.serverSocket = serverSocket;
     }
 
-    // Send
+    // Public methods
 
     /**
-     * Sends a message to the client
-     * @param message The message to send
+     * Listens for new clients and runs client handlers
+     * @throws IOException Connection error
      */
-    void sendMessage(String message) {
-        this.serverOutput.println(message);
-    }
+    void listenForClients() throws IOException {
+        Socket clientSocket = this.serverSocket.accept();
 
-    // Receive
+        DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+        DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
 
-    /**
-     * Is the server currently receiving data from the client
-     * @return If the server is currently receiving data
-     */
-    boolean isReceiving() {
-        try {
-            return (this.currentInput = this.serverInput.readLine()) != null;
-        } catch (IOException e) {
-            return false;
-        }
-    }
+        Thread thread = new ClientHandler(clientSocket, dis, dos);
 
-    /**
-     * Gets the message being send to the server
-     * @return The received message
-     * @throws IOException Error receiving input
-     */
-    String getMessage() throws IOException {
-        if (this.currentInput != null) {
-            return this.currentInput;
-        }
-
-        throw new IOException("No input received");
+        thread.start();
     }
 
 }
