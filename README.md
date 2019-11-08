@@ -14,3 +14,7 @@ java Main [port]
 15:13 08/11/2019 [user1] First message...
 15:13 08/11/2019 [user2] Second message...
 ```
+
+## Client
+
+The client can be found at [bilaalrashid/ChatClient](https://github.com/bilaalrashid/ChatClient)
