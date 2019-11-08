@@ -69,7 +69,7 @@ class ClientHandler extends Thread {
                 try {
                     this.close();
                 } catch (IOException io) {
-                    Console.write("Connection error");
+                    Console.write("Error closing client");
                 }
             } catch (Exception e) {
                 Console.write("Connection error");
